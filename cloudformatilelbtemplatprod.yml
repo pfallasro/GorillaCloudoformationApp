@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  GorillaCloudformationApp:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      Description: AWS Elastic Beanstalk Gorilla Application
+  GorillaApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: GorillaCloudformationApp
+      Description: AWS ElasticBeanstalk Gorilla Application Version
+      SourceBundle:
+        SourceBundle: /BuildArtifact.zip
+  GorillaConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      ApplicationName:
+        Ref: GorillaCloudformationApp
+      Description: AWS ElasticBeanstalk Gorilla Configuration Template
+      OptionSettings:
+      - Namespace: aws:autoscaling:asg
+        OptionName: MinSize
+        Value: '1'
+      - Namespace: aws:autoscaling:asg
+        OptionName: MaxSize
+        Value: '3'
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: EnvironmentType
+        Value: LoadBalanced
+      - Namespace: aws:elasticbeanstalk:container:nodejs
+        OptionName: NodeVersion 
+        Value: 8.16.0
+      - Namespace: aws:elasticbeanstalk:container:nodejs
+        OptionName: NodeCommand
+        Value: npm start
+      SolutionStackName: 64bit Amazon Linux running Node
+  GorillaEnvironmentProd:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName:
+        Ref: GorillaCloudformationApp
+      Description: AWS ElasticBeanstalk Gorilla App PROD Environment
+      TemplateName:
+        Ref: GorillaConfigurationTemplate
+      VersionLabel:
+        Ref: GorillaApplicationVersion
