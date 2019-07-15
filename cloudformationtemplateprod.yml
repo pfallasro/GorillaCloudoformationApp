@@ -11,7 +11,8 @@ Resources:
         Ref: GorillaCloudformationApp
       Description: AWS ElasticBeanstalk Gorilla Application Version
       SourceBundle:
-        SourceBundle: BuildArtifact
+        S3Bucket: !Sub "gorillacloudformationappartifacts-${AWS::Region}"
+        S3Key: GorillaCloudformationAppArtifacts.zip
   GorillaConfigurationTemplate:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
     Properties:
